@@ -1,0 +1,11 @@
+
+<% items.forEach((item,key) => { %>
+<div class="row1">
+    <p><span class="count"><%= key+1 %></span> Item <%= item %></p>
+</div>
+<% }) %>
+<% if(totalItems > 3){ %>
+    <div class="sec_right1">
+        <input type="button" value="<" onclick = "getItems('pre')"> &nbsp;&nbsp;<input type="button" onclick = "getItems('next')" value=">">
+    </div>
+<% } %>

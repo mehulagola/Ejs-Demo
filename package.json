@@ -1,0 +1,11 @@
+{
+  "name": "sample app",
+  "version": "1.0.0",
+  "description": "A sample app with EJS, Node, and Express",
+  "main": "app.js",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^2.4.1",
+    "express": "^4.13.4"
+  }
+}

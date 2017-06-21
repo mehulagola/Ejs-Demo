@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Node.js Template</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> 
+    <link rel="stylesheet" href="/style.css"> 
+    <script src="/jquery.js"></script>
+    <script src="/jquery-ui.js"></script>
+</head>
+
+<body>
+    <!-- <div class="container"> -->
+    <div class="main_wrapper">
+       <div class="col-md-3" style="padding:0px;border:1px solid #7E7E7E">
+            <div class="sec_left">
+                <div class="btn_option">
+                    <a href="javascript:void(0);">Option</a>
+                </div>
+                <div class="qunty_txt">
+                    <label>Quantity</label>
+                    <input type="text" name="txt" id="size" placeholder="Type here">
+                </div>
+            </div>
+       </div>
+       <div id="submenu" class="col-md-2 hidden" style="background: #AEABAB;
+        border: 1px solid #7E7E7E;">
+            <div class="sidebar">
+                <div>
+                    <select id="selectDD" onchange = "getItems('Options')">
+                        <option>Dropdown</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+       <div id="sidebar" class="col-md-9" style="padding:0px;border:1px solid #7E7E7E;border-left:0px">
+            <div class="sec_right">
+                <% items.forEach((item,key) => { %>
+                <div class="row1">
+                    <p><span class="count"><%= key+1 %></span> Item <%= item %></p>
+                </div>
+                <% }) %>
+                <% if(totalItems > 3){ %>
+                    <div class="sec_right1">
+                        <input type="button" value="<" onclick = "getItems('pre')"> &nbsp;&nbsp;<input type="button" onclick = "getItems('next')" value=">">
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</body>
+    <script type="text/javascript">
+        var count = 1;
+        $('.btn_option > a').click(function() {
+            var sidebar = $('#sidebar');
+            if (sidebar.hasClass('col-md-9')){
+                sidebar.animate({}, "slow").removeClass('col-md-9').addClass('col-md-7');
+                $('#submenu').removeClass('hidden');
+                $('.sec_right .count').css('display','none');
+            } else {
+                sidebar.animate({}, "slow").removeClass('col-md-7').addClass('col-md-9');
+                $('#submenu').addClass('hidden');
+            }
+        });
+
+        function getItems(page) {
+            var size = $('#size').val();
+            if (page == 'pre' && count>1) {
+                count--;
+            } else if(page == 'next' && count*3 < size ) {
+                count++;
+            }
+            var option = $('#selectDD').val();
+           
+            var start = ((count *3) - 2);
+            var limit = count * 3;
+            if(size) {
+                $('#size').css('border','2px solid #7E7E7E');
+                if (start <= size && start>=1) {
+                    limit = limit > size ? size : limit;
+                    $.get( '/',{type:option,start: start,size:limit,totalItems:size}, function(data) {
+                        $('.sec_right').html(data);
+                        if (!$('#submenu').hasClass('hidden')) {
+                            $('.sec_right .count').css('display','none');
+                        }
+                    });
+                } else {
+                    alert ('No items to display');
+                }
+            } else {
+                $('#size').css('border','2px solid red');
+                $('.sec_right').html('');
+            }
+        }
+        //Hide sub menu outside click
+        $(document).mouseup(function(e) {
+            var container = $("#submenu");
+            // if the target of the click isn't the container nor a descendant of the container
+            if (!container.is(e.target) && container.has(e.target).length === 0 && !$("#submenu").hasClass('hidden')) {
+                $("#sidebar").removeClass('col-md-7').addClass('col-md-9');
+                $('#submenu').addClass('hidden');
+                $('.sec_right .count').css('display','block');
+            }
+        });
+    </script>
+</html>
